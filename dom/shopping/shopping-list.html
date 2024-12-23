@@ -34,7 +34,7 @@
         function buttonClicked() {
             const input = inputField.value;
             inputField.value = '';
-
+            console.log(event.type);
             const listItem = document.createElement('li');
             const span = document.createElement('span');
             const button = document.createElement('button');
@@ -45,8 +45,9 @@
             span.textContent = input;
             button.textContent = 'Delete';
             
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (e) => {
                 list.removeChild(listItem);
+                console.log(e);
                 inputField.focus();
             });
 
