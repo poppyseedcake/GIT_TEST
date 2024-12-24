@@ -35,6 +35,24 @@
         const frankie = new Person("Frankie");
         frankie.introduceSelf();
         // "Hi! I'm Frankie."
+
+        function sumOfTripledEvens(array) {
+            //Take in an array.
+            //For every even number, it will triple it.
+            //Then it will sum all those even numbers.
+            // let evenNumbers = array.filter(num => num % 2 == 0);
+            // evenNumbers = evenNumbers.map(num => num * 3);
+            // evenNumbers = evenNumbers.reduce((total, num) => {
+            //     return total += num;
+            // });
+            return array
+                .filter(num => num % 2 == 0)
+                .map(num => num * 3)
+                .reduce((total, num) => {return total += num;});
+        }
+
+        const arr = [1, 2, 3, 4, 5];
+        const result = sumOfTripledEvens(arr);
     </script>
   </body>
 
