@@ -176,13 +176,36 @@
             return sum / users.length;
         }
 
-        let john = { name: "John", age: 25 };
-        let pete = { name: "Pete", age: 30 };
-        let mary = { name: "Mary", age: 29 };
+        // let john = { name: "John", age: 25 };
+        // let pete = { name: "Pete", age: 30 };
+        // let mary = { name: "Mary", age: 29 };
 
-        let arr = [ john, pete, mary ];
+        // let arr = [ john, pete, mary ];
 
-        console.log( getAverageAge(arr) ); // (25 + 30 + 29) / 3 = 28
+        // console.log( getAverageAge(arr) ); // (25 + 30 + 29) / 3 = 28
+
+
+        function unique(arr) {
+            const unique = [];
+            arr.forEach(name => {
+                if (unique.includes(name) === false) {
+                    unique.push(name);
+                }
+                // let len = arr.filter(item => item === name).length
+                // if (len === 1) {
+                //     unique.push(name);
+                // }
+                }
+
+            );
+            return unique;
+        }
+
+        let strings = ["Hare", "Krishna", "Hare", "Krishna",
+            "Krishna", "Krishna", "Hare", "Hare", ":-O"
+        ];
+
+        console.log( unique(strings) ); // Hare, Krishna, :-O
 
     </script>
   </body>
