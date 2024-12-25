@@ -51,8 +51,20 @@
                 .reduce((total, num) => {return total += num;});
         }
 
-        const arr = [1, 2, 3, 4, 5];
-        const result = sumOfTripledEvens(arr);
+        //const arr = [1, 2, 3, 4, 5];
+        //const result = sumOfTripledEvens(arr);
+
+        function filterRangeInPlace(arr, a, b) {
+            arr.forEach((item, index) => {
+                if(item < a || item > b) {
+                    arr.splice(index, 1);
+                }
+            });
+        }
+
+        let arr = [5, 3, 8, 1];
+
+        filterRangeInPlace(arr, 1, 4);
     </script>
   </body>
 
