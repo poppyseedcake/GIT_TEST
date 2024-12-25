@@ -62,9 +62,48 @@
             });
         }
 
-        let arr = [5, 3, 8, 1];
+        // let arr = [5, 3, 8, 1];
+        // filterRangeInPlace(arr, 1, 4);
+ 
 
-        filterRangeInPlace(arr, 1, 4);
+        // let arr = [5, 2, 1, -10, 8];
+        // arr.sort((a, b) => b - a);
+        // console.log( arr ); // 8, 5, 2, 1, -10
+
+
+        function copySorted(arr) {
+            const copyArr = arr.slice();
+            return copyArr.sort();
+        }
+
+        // let arr = ["HTML", "JavaScript", "CSS"];
+        // let sorted = copySorted(arr);
+        // console.log( sorted ); // CSS, HTML, JavaScript
+        // console.log( arr ); // HTML, JavaScript, CSS (no changes)
+
+
+        let john = { name: "John", surname: "Smith", id: 1 };
+        let pete = { name: "Pete", surname: "Hunt", id: 2 };
+        let mary = { name: "Mary", surname: "Key", id: 3 };
+
+        let users = [ john, pete, mary ];
+
+        let usersMapped = users.map(user => ({
+            fullName: `${user.name} ${user.surname}`,
+            id: user.id
+
+        }));
+        /*
+        usersMapped = [
+        { fullName: "John Smith", id: 1 },
+        { fullName: "Pete Hunt", id: 2 },
+        { fullName: "Mary Key", id: 3 }
+        ]
+        */
+
+        console.log( usersMapped[0].id ) // 1
+        console.log( usersMapped[0].fullName ) // John Smith
+
     </script>
   </body>
 
