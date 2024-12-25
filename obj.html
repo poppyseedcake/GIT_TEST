@@ -160,16 +160,29 @@
         //     alert(`${key}: ${count[key]}`);
         // }
 
-        let arr = [1, 2, 3];
+        // let arr = [1, 2, 3];
 
-        shuffle(arr);
-        // arr = [3, 2, 1]
+        // shuffle(arr);
+        // // arr = [3, 2, 1]
 
-        shuffle(arr);
-        // arr = [2, 1, 3]
+        // shuffle(arr);
+        // // arr = [2, 1, 3]
 
-        shuffle(arr);
-        // arr = [3, 1, 2]
+        // shuffle(arr);
+        // // arr = [3, 1, 2]
+
+        function getAverageAge(users) {
+            const sum = users.reduce((total, current) => total + current.age,0);
+            return sum / users.length;
+        }
+
+        let john = { name: "John", age: 25 };
+        let pete = { name: "Pete", age: 30 };
+        let mary = { name: "Mary", age: 29 };
+
+        let arr = [ john, pete, mary ];
+
+        console.log( getAverageAge(arr) ); // (25 + 30 + 29) / 3 = 28
 
     </script>
   </body>
