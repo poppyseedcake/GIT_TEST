@@ -6,7 +6,7 @@
     <title>Object-oriented JavaScript example</title>
   </head>
 
-  <body>
+  <body style="background: darkslategrey;">
     <p>This example requires you to enter commands in your browser's JavaScript console (see <a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_are_browser_developer_tools">What are browser developer tools</a> for more information).</p>
     
     <script>
@@ -207,22 +207,22 @@
 
         // console.log( unique(strings) ); // Hare, Krishna, :-O
 
-        function groupById(arr) {
-            return arr.reduce((obj, value) => {
-                obj[value.id] = value;
-                return obj;
-            }, {})
-        }
+        // function groupById(arr) {
+        //     return arr.reduce((obj, value) => {
+        //         obj[value.id] = value;
+        //         return obj;
+        //     }, {});
+        // }
 
 
-        let users = [
-        {id: 'john', name: "John Smith", age: 20},
-        {id: 'ann', name: "Ann Smith", age: 24},
-        {id: 'pete', name: "Pete Peterson", age: 31},
-        ];
+        // let users = [
+        // {id: 'john', name: "John Smith", age: 20},
+        // {id: 'ann', name: "Ann Smith", age: 24},
+        // {id: 'pete', name: "Pete Peterson", age: 31},
+        // ];
 
-        let usersById = groupById(users);
-        console.log(usersById);
+        // let usersById = groupById({users});
+        // console.log(usersById)
         /*
         // after the call we should have:
 
@@ -232,6 +232,47 @@
         pete: {id: 'pete', name: "Pete Peterson", age: 31},
         }
         */
+
+        // let str = "racecar";
+        // str = str.toLowerCase();
+        // const arrStr = str.split("");
+
+        // for (let i = arrStr.length - 1; i >= 0; i--) {
+        //     if (arrStr[i] === " " || arrStr[i] === "," || arrStr[i] === "." || arrStr[i] === "!" || arrStr[i] === "?") {
+        //         arrStr.splice(i, 1);
+        //     };
+        // }
+
+        // const arrStrReversed = arrStr.slice().reverse();
+        // if (arrStr.join("") === arrStrReversed.join("")) console.log(true)
+
+        const people = [
+      {
+        name: "Carly",
+        yearOfBirth: 1942,
+        yearOfDeath: 1970,
+      },
+      {
+        name: "Ray",
+        yearOfBirth: 1962,
+        yearOfDeath: 2011,
+      },
+      {
+        name: "Jane",
+        yearOfBirth: 1912,
+        yearOfDeath: 1941,
+      },
+    ]
+
+        const findTheOldest = function(people) {
+            const oldest = people.sort((a, b) => {
+                const lastguy = a.yearOfDeath - a.yearOfBirth;
+                const nextguy = b.yearOfDeath - b.yearOfBirth;
+                return lastguy > nextguy ? -1 : 1;
+            });
+            return oldest[0];
+        };
+
 
     </script>
   </body>
