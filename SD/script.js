@@ -15,8 +15,34 @@ console.log(results);
 
 
 (async function () {
-    // Zakładamy, że masz już bazę linków w zmiennej "results"
-    // Przykładowo:
+    // Flaga do zatrzymywania wykonywania skryptu (możesz wywołać stopScript() z konsoli)
+    let stopExecution = false;
+    window.stopScript = () => {
+      stopExecution = true;
+      console.log('Zatrzymano wykonywanie skryptu.');
+    };
+  
+    // Funkcja pomocnicza do prawidłowego eskapowania wartości CSV
+    function escapeCSV(value) {
+      if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+        return '"' + value.replace(/"/g, '""') + '"';
+      }
+      return value;
+    }
+  
+    // Funkcja inicjująca pobranie pliku CSV
+    function downloadCSV(csvContent, filename) {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  
+    // Przykładowa baza linków (zmienna results)
     // const results = [
     //   { href: 'https://secretdelivery.pl/amorelie', title: 'Amorelie' },
     //   { href: 'https://secretdelivery.pl/inny-link', title: 'Inny Link' }
@@ -24,13 +50,14 @@ console.log(results);
   
     // Funkcja pobierająca szczegóły pojedynczego produktu na podstawie jego URL
     async function getProductDetails(productUrl) {
+      if (stopExecution) return null;
       try {
         const response = await fetch(productUrl);
         const html = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
   
-        // Pobiera elementy: link z nazwą marki oraz span z nazwą produktu
+        // Wyszukaj element z nazwą firmy (marki) oraz nazwą produktu
         const brandElement = doc.querySelector('a.product-detail-manufacturer-link');
         const productNameElement = doc.querySelector('span.d-block');
   
@@ -44,37 +71,36 @@ console.log(results);
       }
     }
   
-    // Funkcja pobierająca produkty ze strony z listą produktów i obsługująca paginację
+    // Funkcja pobierająca produkty ze strony z listą produktów z obsługą paginacji
     async function getProductsFromListing(listingUrl) {
       let allProductsDetails = [];
       let currentPageUrl = listingUrl;
       let hasNextPage = true;
   
-      while (hasNextPage) {
+      while (hasNextPage && !stopExecution) {
+        console.log(`Pobieranie strony: ${currentPageUrl}`);
         try {
-          console.log(`Pobieranie strony: ${currentPageUrl}`);
           const response = await fetch(currentPageUrl);
           const html = await response.text();
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
   
-          // Znajdź wszystkie linki do produktów (elementy <a> z klasą "product-image-link")
+          // Pobierz linki do poszczególnych produktów (elementy <a> z klasą "product-image-link")
           const productLinkElements = doc.querySelectorAll('a.product-image-link');
           const productLinks = Array.from(productLinkElements).map(el => el.href);
   
-          // Pętla sekwencyjna – każde zapytanie dla produktu jest wykonywane po kolei
+          // Sekwencyjna pętla po linkach produktów
           for (let link of productLinks) {
+            if (stopExecution) break;
             const details = await getProductDetails(link);
-            allProductsDetails.push(details);
+            if (details) allProductsDetails.push(details);
           }
   
-          // Sprawdzamy, czy istnieje przycisk "następna strona"
-          // Jeśli element input o id "p-next-bottom" nie ma atrybutu disabled, to przechodzimy do kolejnej strony.
+          // Sprawdź, czy istnieje aktywny przycisk "następna strona"
+          // Jeśli element input o id "p-next-bottom" nie ma atrybutu disabled, przechodzimy na kolejną stronę
           const nextPageInput = doc.querySelector('input#p-next-bottom:not([disabled])');
-  
           if (nextPageInput) {
             const nextPageNumber = nextPageInput.value; // np. "2", "3", itd.
-            // Budujemy URL kolejnej strony. Jeśli URL początkowy nie posiada odpowiedniego parametru, dodajemy go.
             const urlObj = new URL(listingUrl);
             urlObj.searchParams.set('p', nextPageNumber);
             currentPageUrl = urlObj.href;
@@ -90,16 +116,28 @@ console.log(results);
       return allProductsDetails;
     }
   
-    // Funkcja przetwarzająca każdy link z Twojej bazy 'results'
+    // Główna funkcja przetwarzająca kolejne strony z bazy 'results'
     async function processResults() {
+      let csvRows = [];
+      // Dodaj nagłówek CSV
+      csvRows.push('Nazwa Firmy,Nazwa Produktu,Link do Produktu');
+  
       for (let item of results) {
+        if (stopExecution) break;
         console.log(`\nPrzetwarzanie listy produktów z: ${item.href}`);
         const products = await getProductsFromListing(item.href);
         console.log(`Produkty pobrane ze strony ${item.href}:`, products);
-        // Tutaj można zapisać lub przetworzyć pobrane dane
+        // Dla każdego pobranego produktu dodajemy wiersz CSV
+        for (let product of products) {
+          const row = `${escapeCSV(product.brand)},${escapeCSV(product.productName)},${escapeCSV(product.productUrl)}`;
+          csvRows.push(row);
+        }
       }
+      // Po zakończeniu przetwarzania łączymy wiersze i inicjujemy pobranie pliku CSV
+      const csvContent = csvRows.join('\n');
+      downloadCSV(csvContent, 'produkty.csv');
     }
   
     // Rozpoczęcie przetwarzania
-    processResults();
+    await processResults();
   })();
